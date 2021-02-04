@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Unit extends Model
 {
     use HasFactory;
+
+    const ZIP = 'ZIP';
+    const VIDEO = 'VIDEO';
+    const SECTION = 'SECTION';
 }
