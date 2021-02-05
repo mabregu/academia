@@ -6,7 +6,7 @@
     <div class="container">
         <div class="section-title mb-3 mt-0">
             <h2>{{ __("Tus unidades") }}</h2>
-            <a href="#" class="site-btn">
+            <a href="{{ route('teacher.units.create') }}" class="site-btn">
                 {{ __("Crear unidad") }}
             </a>
         </div>

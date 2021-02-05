@@ -46,4 +46,6 @@ Route::group(['prefix' => 'teacher', 'as' => 'teacher.', 'middleware' => ['teach
         ->name('units');
     Route::get('/units/create', 'TeacherController@createUnit')
         ->name('units.create');
+    Route::post('/units/store', 'TeacherController@storeUnit')
+        ->name('units.store');
 });
