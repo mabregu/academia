@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * App\Models\Course
@@ -81,5 +82,16 @@ class Course extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function scopeFiltered(Builder $builder)
+    {
+        $builder->with('teacher');
+        $builder->where('status', Course::PUBLISHED);
+        if (session()->has('search[courses]')) {
+            $builder->where('title', 'LIKE', '%' . session('search[courses]') . '%');
+        }
+        
+        return $builder->paginate();
     }
 }
