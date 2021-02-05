@@ -62,7 +62,7 @@ class Course extends Model
 
     public function imagePath()
     {
-        return sprintf('%s/%s', 'storage/courses', $this->picture);
+        return sprintf('%s/%s', '/storage/courses', $this->picture);
     }
 
     public function categories()
@@ -92,7 +92,15 @@ class Course extends Model
         if (session()->has('search[courses]')) {
             $builder->where('title', 'LIKE', '%' . session('search[courses]') . '%');
         }
-        
+
         return $builder->paginate();
+    }
+
+    public function scopeForTeacher(Builder $builder)
+    {
+        return $builder
+            ->withCount('students')
+            ->where('user_id', auth()->id())
+            ->paginate();
     }
 }
