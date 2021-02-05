@@ -63,4 +63,12 @@ class LoginController extends Controller
             $this->username() => [trans('auth.failed')],
         ]);
     }
+
+    public function redirectPath()
+    {
+        if (auth()->user()->isTeacher()) {
+            return '/teacher';
+        }
+        return '/';
+    }
 }
