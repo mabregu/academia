@@ -37,13 +37,13 @@
                             <td>
                                 <a
                                     class="btn btn-outline-dark"
-                                    href="#"
+                                    href="{{ route("teacher.units.edit", ["unit" => $unit]) }}"
                                 >
                                     <i class="fa fa-pencil-square"></i> {{ __("Editar") }}
                                 </a>
                                 <a
                                     class="btn btn-outline-danger delete-record"
-                                    data-route="#"
+                                    data-route="{{ route("teacher.units.destroy", ["unit" => $unit]) }}"
                                     href="#"
                                 >
                                     <i class="fa fa-trash-o"></i> {{ __("Eliminar") }}

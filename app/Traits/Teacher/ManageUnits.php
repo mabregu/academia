@@ -27,16 +27,7 @@ trait ManageUnits {
             $file = Uploader::uploadFile("file", "units");
         }
 
-        //$unit = Unit::create($this->unitInput($file));
-        $unit = Unit::create([
-            "course_id" => $request->input("course_id"),
-            "title" => $request->input("title"),
-            "content" => $request->input("content"),
-            "file" => $file,
-            "unit_type" => $request->input("unit_type"),
-            "unit_time" => $request->input("unit_time"),
-            "free" => $request->input("free")
-        ]);
+        $unit = Unit::create($this->unitInput($file));
 
         session()->flash(
             "message", [
@@ -47,34 +38,34 @@ trait ManageUnits {
         return redirect(route('teacher.units'));
     }
 
-    // public function editUnit(Unit $unit) {
-    //     $title = __("Editar unidad :unit", ["unit" => $unit->title]);
-    //     $textButton = __("Actualizar unidad");
-    //     $courses = Course::forTeacher();
-    //     $options = ['route' => [
-    //         'teacher.units.update', ['unit' => $unit]], 'files' => true
-    //     ];
-    //     $update = true;
-    //     return view(
-    //         'teacher.units.edit',
-    //         compact('title', 'courses', 'unit', 'options', 'textButton', 'update')
-    //     );
-    // }
+    public function editUnit(Unit $unit) {
+        $title = __("Editar unidad :unit", ["unit" => $unit->title]);
+        $textButton = __("Actualizar unidad");
+        $courses = Course::forTeacher();
+        $options = ['route' => [
+            'teacher.units.update', ['unit' => $unit]], 'files' => true
+        ];
+        $update = true;
+        return view(
+            'teacher.units.edit',
+            compact('title', 'courses', 'unit', 'options', 'textButton', 'update')
+        );
+    }
 
-    // public function updateUnit(UnitRequest $request, Unit $unit) {
-    //     $file = $unit->file;
-    //     if ($request->hasFile('file')) {
-    //         if ($unit->file) {
-    //             Uploader::removeFile("units", $unit->file);
-    //         }
-    //         $file = Uploader::uploadFile('file', 'units');
-    //     }
+    public function updateUnit(UnitRequest $request, Unit $unit) {
+        $file = $unit->file;
+        if ($request->hasFile('file')) {
+            if ($unit->file) {
+                Uploader::removeFile("units", $unit->file);
+            }
+            $file = Uploader::uploadFile('file', 'units');
+        }
 
-    //     $unit->fill($this->unitInput($file))->save();
+        $unit->fill($this->unitInput($file))->save();
 
-    //     session()->flash("message", ["success", __("Unidad actualizada satisfactoriamente")]);
-    //     return redirect(route('teacher.units'));
-    // }
+        session()->flash("message", ["success", __("Unidad actualizada satisfactoriamente")]);
+        return redirect(route('teacher.units'));
+    }
 
     // public function destroyUnit(Unit $unit) {
     //     try {
@@ -95,15 +86,15 @@ trait ManageUnits {
     //     }
     // }
 
-    // protected function unitInput(string $file = null): array {
-    //     return [
-    //         "course_id" => request("course_id"),
-    //         "title" => request("title"),
-    //         "content" => request("content"),
-    //         "file" => $file,
-    //         "unit_type" => request("unit_type"),
-    //         "unit_time" => request("unit_time"),
-    //         "free" => request("free")
-    //     ];
-    // }
+    protected function unitInput(string $file = null): array {
+        return [
+            "course_id" => request("course_id"),
+            "title" => request("title"),
+            "content" => request("content"),
+            "file" => $file,
+            "unit_type" => request("unit_type"),
+            "unit_time" => request("unit_time"),
+            "free" => request("free")
+        ];
+    }
 }

@@ -1,5 +1,5 @@
 const mix = require('laravel-mix');
-
++
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -13,4 +13,6 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .vue()
-    .sass('resources/sass/app.scss', 'public/css');
+    .sass('resources/sass/app.scss', 'public/css')
+    .copy('node_modules/jconfirm/jConfirm.js', 'public/js')
+    .copy('node_modules/jconfirm/jConfirm.css', 'public/css')
