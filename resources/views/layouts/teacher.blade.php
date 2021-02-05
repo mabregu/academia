@@ -38,6 +38,8 @@
 
     @include('partials.teacher.navigation')
 
+    @component('components.alert-component')@endcomponent
+
     @yield('content')
 
     @include('partials.learning.footer')

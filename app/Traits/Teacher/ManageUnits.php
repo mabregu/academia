@@ -21,22 +21,22 @@ trait ManageUnits {
         return view('teacher.units.create', compact('title', 'courses', 'unit', 'options', 'textButton'));
     }
 
-    // public function storeUnit(UnitRequest $request) {
-    //     $file = null;
-    //     if ($request->hasFile("file")) {
-    //         $file = Uploader::uploadFile("file", "units");
-    //     }
+    public function storeUnit(UnitRequest $request) {
+        $file = null;
+        if ($request->hasFile("file")) {
+            $file = Uploader::uploadFile("file", "units");
+        }
 
-    //     $unit = Unit::create($this->unitInput($file));
+        $unit = Unit::create($this->unitInput($file));
 
-    //     session()->flash(
-    //         "message", [
-    //             "success",
-    //             __("Unidad dada de alta satisfactoriamente")
-    //         ]
-    //     );
-    //     return redirect(route('teacher.units'));
-    // }
+        session()->flash(
+            "message", [
+                "success",
+                __("Unidad dada de alta satisfactoriamente")
+            ]
+        );
+        return redirect(route('teacher.units'));
+    }
 
     // public function editUnit(Unit $unit) {
     //     $title = __("Editar unidad :unit", ["unit" => $unit->title]);
