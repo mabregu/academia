@@ -27,7 +27,16 @@ trait ManageUnits {
             $file = Uploader::uploadFile("file", "units");
         }
 
-        $unit = Unit::create($this->unitInput($file));
+        //$unit = Unit::create($this->unitInput($file));
+        $unit = Unit::create([
+            "course_id" => $request->input("course_id"),
+            "title" => $request->input("title"),
+            "content" => $request->input("content"),
+            "file" => $file,
+            "unit_type" => $request->input("unit_type"),
+            "unit_time" => $request->input("unit_time"),
+            "free" => $request->input("free")
+        ]);
 
         session()->flash(
             "message", [
