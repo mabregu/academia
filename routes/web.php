@@ -29,3 +29,7 @@ Route::group(['prefix' => 'courses', 'as' => 'courses.'], function () {
     Route::get('/', 'CourseController@index')->name('index');
     Route::post('/search', 'CourseController@search')->name('search');
 });
+
+Route::group(['prefix' => 'teacher', 'as' => 'teacher.'], function () {
+    Route::get('/', 'TeacherController@index')->name('index');
+});

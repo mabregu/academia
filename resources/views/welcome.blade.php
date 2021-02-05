@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.learning')
 
 @section('hero')
     @include('partials.learning.hero')
