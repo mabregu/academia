@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -18,4 +19,13 @@ Route::get('/', 'WelcomeController@index')->name('welcome');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Route::get('/phpinfo', function () {
+//     phpinfo();
+// });
+
+Route::group(['prefix' => 'courses', 'as' => 'courses.'], function () {
+    Route::get('/', 'CourseController@index')->name('index');
+    Route::post('/search', 'CourseController@search')->name('search');
+});

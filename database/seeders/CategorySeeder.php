@@ -28,7 +28,7 @@ class CategorySeeder extends Seeder
             # code...
             Category::factory()->create([
                 "name" => $category,
-                    "picture" => Image::image(storage_path('app/public/categories'), $category, $bg, 850, 350, false),
+                "picture" => Image::image(storage_path('app/public/categories'), $category, $bg, 850, 350, false),
             ]);
         }
     }
