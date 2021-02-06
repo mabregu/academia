@@ -67,24 +67,28 @@ trait ManageUnits {
         return redirect(route('teacher.units'));
     }
 
-    // public function destroyUnit(Unit $unit) {
-    //     try {
-    //         if (request()->ajax()) {
-    //             if ($unit->file) {
-    //                 Uploader::removeFile("units", $unit->file);
-    //             }
-    //             $unit->delete();
-    //             session()->flash("message", ["success", __("La unidad :id del curso :course ha sido eliminada correctamente", [
-    //                 "id" => $unit->id,
-    //                 "course" => $unit->course->title
-    //             ])]);
-    //         } else {
-    //             abort(401);
-    //         }
-    //     } catch (\Exception $exception) {
-    //         session()->flash("message", ["danger", $exception->getMessage()]);
-    //     }
-    // }
+    public function destroyUnit(Unit $unit) {
+        try {
+            if (request()->ajax()) {
+                if ($unit->file) {
+                    // Si la unidad tiene archivo lo elimina
+                    Uploader::removeFile("units", $unit->file);
+                }
+                $unit->delete();
+                session()->flash("message", [
+                    "success",
+                    __("La unidad :id del curso :course ha sido eliminada correctamente", [
+                        "id" => $unit->id,
+                        "course" => $unit->course->title
+                    ])
+                ]);
+            } else {
+                abort(401);
+            }
+        } catch (\Exception $exception) {
+            session()->flash("message", ["danger", $exception->getMessage()]);
+        }
+    }
 
     protected function unitInput(string $file = null): array {
         return [

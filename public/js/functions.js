@@ -1,4 +1,4 @@
-jQuery(document).ready(function () {
+ jQuery(document).ready(function () {
     $('.delete-record').jConfirm().on('confirm', function(e){
         const btn = $(this);
         const route = btn.data("route");
