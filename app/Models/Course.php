@@ -112,9 +112,31 @@ class Course extends Model
         return $this->hasMany(Unit::class)->orderBy("order", "asc");
     }
 
+    public function getRatingAttribute () {
+        return $this->reviews->avg('stars');
+    }
+
+    // public function getFormattedPriceAttribute() {
+    //     return Currency::formatCurrency($this->price);
+    // }
+
+    public function totalVideoUnits() {
+        return $this->units->where("unit_type", Unit::VIDEO)->count();
+    }
+
+    public function totalFileUnits() {
+        return $this->units->where("unit_type", Unit::ZIP)->count();
+    }
+
+    public function totalTime() {
+        $minutes = $this->units->where("unit_type", Unit::VIDEO)->sum("unit_time");
+        return gmdate("H:i", $minutes * 60);
+    }
+
     public function scopeFiltered(Builder $builder)
     {
         $builder->with('teacher');
+        $builder->withCount('students');
         $builder->where('status', Course::PUBLISHED);
         if (session()->has('search[courses]')) {
             $builder->where('title', 'LIKE', '%' . session('search[courses]') . '%');

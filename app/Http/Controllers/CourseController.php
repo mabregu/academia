@@ -23,4 +23,9 @@ class CourseController extends Controller
 
         return redirect(route('courses.index'));
     }
+
+    public function show(Course $course) {
+        $course->load("units", "students", "reviews.author");
+        return view('learning.courses.show', compact('course'));
+    }
 }
