@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -37,8 +36,16 @@ Route::group(['prefix' => 'teacher', 'as' => 'teacher.', 'middleware' => ['teach
      */
     Route::get('/courses', 'TeacherController@courses')
         ->name('courses');
+
     Route::get('/courses/create', 'TeacherController@createCourse')
         ->name('courses.create');
+    Route::post('/courses/store', 'TeacherController@storeCourse')
+        ->name('courses.store');
+
+    Route::get('/courses/{course}', 'TeacherController@editCourse')
+        ->name('courses.edit');
+    Route::put('/courses/{course}', 'TeacherController@updateCourse')
+        ->name('courses.update');
     /**
      * UNIT ROUTES
      */

@@ -1,11 +1,11 @@
 <?php
 namespace App\Traits\Teacher;
 
-use App\Helpers\Uploader;
-use App\Http\Requests\CourseRequest;
-use App\Models\Course;
 use App\Models\Unit;
-use DB;
+use App\Models\Course;
+use App\Helpers\Uploader;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\CourseRequest;
 
 trait ManageCourses {
     public function courses() {
@@ -21,77 +21,77 @@ trait ManageCourses {
         return view('teacher.courses.create', compact('title', 'course', 'options', 'textButton'));
     }
 
-    // public function storeCourse(CourseRequest $request) {
-    //     try {
-    //         DB::beginTransaction();
-    //         $file = null;
-    //         if ($request->hasFile('picture')) {
-    //             $file = Uploader::uploadFile('picture', 'courses');
-    //         }
+    public function storeCourse(CourseRequest $request) {
+        try {
+            DB::beginTransaction();
+            $file = null;
+            if ($request->hasFile('picture')) {
+                $file = Uploader::uploadFile('picture', 'courses');
+            }
 
-    //         $course = Course::create($this->courseInput($file));
-    //         $course->categories()->sync(request("categories"));
+            $course = Course::create($this->courseInput($file));
+            $course->categories()->sync(request("categories"));
 
-    //         DB::commit();
-    //         session()->flash("message", ["success", __("Curso creado satisfactoriamente")]);
-    //         return redirect(route('teacher.courses.edit', ['course' => $course]));
-    //     } catch (\Throwable $exception) {
-    //         session()->flash("message", ["danger", $exception->getMessage()]);
-    //         return back();
-    //     }
-    // }
+            DB::commit();
+            session()->flash("message", ["success", __("Curso creado satisfactoriamente")]);
+            return redirect(route('teacher.courses.edit', ['course' => $course]));
+        } catch (\Throwable $exception) {
+            session()->flash("message", ["danger", $exception->getMessage()]);
+            return back();
+        }
+    }
 
-    // public function editCourse(Course $course) {
-    //     $course->load("units");
-    //     $title = __("Editar el curso :course", ["course" => $course->title]);
-    //     $textButton = __("Actualizar curso");
-    //     $options = ['route' => ['teacher.courses.update', ["course" => $course]], 'files' => true];
-    //     $update = true;
-    //     return view('teacher.courses.edit', compact('title', 'course', 'options', 'textButton', 'update'));
-    // }
+    public function editCourse(Course $course) {
+        $course->load("units");
+        $title = __("Editar el curso :course", ["course" => $course->title]);
+        $textButton = __("Actualizar curso");
+        $options = ['route' => ['teacher.courses.update', ["course" => $course]], 'files' => true];
+        $update = true;
+        return view('teacher.courses.edit', compact('title', 'course', 'options', 'textButton', 'update'));
+    }
 
-    // public function updateCourse(CourseRequest $request, Course $course) {
-    //     try {
-    //         DB::beginTransaction();
+    public function updateCourse(CourseRequest $request, Course $course) {
+        try {
+            DB::beginTransaction();
 
-    //         $file = $course->picture;
-    //         if ($request->hasFile('picture')) {
-    //             if ($course->picture) {
-    //                 Uploader::removeFile("courses", $course->picture);
-    //             }
-    //             $file = Uploader::uploadFile('picture', 'courses');
-    //         }
-    //         $course->fill($this->courseInput($file, $course->featured))->save();
-    //         $course->categories()->sync(request("categories"));
-    //         $this->updateOrderedUnits();
+            $file = $course->picture;
+            if ($request->hasFile('picture')) {
+                if ($course->picture) {
+                    Uploader::removeFile("courses", $course->picture);
+                }
+                $file = Uploader::uploadFile('picture', 'courses');
+            }
+            $course->fill($this->courseInput($file, $course->featured))->save();
+            $course->categories()->sync(request("categories"));
+            $this->updateOrderedUnits();
 
-    //         DB::commit();
+            DB::commit();
 
-    //         session()->flash("message", ["success", __("Curso actualizado satisfactoriamente")]);
-    //         return back();
-    //     } catch (\Throwable $exception) {
-    //         DB::rollBack();
-    //         session()->flash("message", ["danger", $exception->getMessage()]);
-    //         return back();
-    //     }
-    // }
+            session()->flash("message", ["success", __("Curso actualizado satisfactoriamente")]);
+            return back();
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+            session()->flash("message", ["danger", $exception->getMessage()]);
+            return back();
+        }
+    }
 
-    // protected function courseInput(string $file = null, bool $featured = false): array {
-    //     return [
-    //         "title" => request("title"),
-    //         "description" => request("description"),
-    //         "price" => request("price"),
-    //         "picture" => $file,
-    //         "featured" => $featured
-    //     ];
-    // }
+    protected function courseInput(string $file = null, bool $featured = false): array {
+        return [
+            "title" => request("title"),
+            "description" => request("description"),
+            "price" => request("price"),
+            "picture" => $file,
+            "featured" => $featured
+        ];
+    }
 
-    // protected function updateOrderedUnits() {
-    //     if (request("orderedUnits")) {
-    //         $data = json_decode(request("orderedUnits"));
-    //         foreach($data as $unit) {
-    //             Unit::whereId($unit->id)->update(["order" => $unit->order]);
-    //         }
-    //     }
-    // }
+    protected function updateOrderedUnits() {
+        if (request("orderedUnits")) {
+            $data = json_decode(request("orderedUnits"));
+            foreach($data as $unit) {
+                Unit::whereId($unit->id)->update(["order" => $unit->order]);
+            }
+        }
+    }
 }

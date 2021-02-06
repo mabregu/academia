@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Hashidable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,7 +45,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Course extends Model
 {
-    use HasFactory;
+    use HasFactory, Hashidable;
 
     protected $fillable = [
         'user_id',
@@ -59,6 +60,28 @@ class Course extends Model
     const PUBLISHED = 1;
     const PENDING = 2;
     const REJECTED = 3;
+
+    const prices = [
+        '9.99' => '9.99€',
+        '12.99' => '12.99€',
+        '19.99' => '19.99€',
+        '29.99' => '29.99€',
+        '49.99' => '49.99€'
+    ];
+
+    protected $appends = [
+        "rating",
+        "formatted_price"
+    ];
+
+    protected static function boot() {
+        parent::boot();
+        if ( !app()->runningInConsole() ) {
+            self::saving(function ($table) {
+                $table->user_id = auth()->id();
+            });
+        }
+    }
 
     public function imagePath()
     {
@@ -83,6 +106,10 @@ class Course extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function units() {
+        return $this->hasMany(Unit::class)->orderBy("order", "asc");
     }
 
     public function scopeFiltered(Builder $builder)
