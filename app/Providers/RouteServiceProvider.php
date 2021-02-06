@@ -7,6 +7,9 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use App\Models\Course;
+use App\Models\Unit;
+use App\Models\User;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -47,6 +50,19 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
         });
+
+        Route::bind('user', function ($value, $route) {
+            return $this->getModel(User::class, $value);
+        });
+
+        Route::bind('unit', function ($value, $route) {
+            //dd($value);
+            return $this->getModel(Unit::class, $value);
+        });
+
+        Route::bind('course', function ($value, $route) {
+            return $this->getModel(Course::class, $value);
+        });
     }
 
     /**
@@ -59,5 +75,11 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
+    }
+
+    protected function getModel($model, $routeKey) {
+        $id = \Hashids::connection($model)->decode($routeKey)[0] ?? null;
+        $modelInstance = resolve($model);
+        return $modelInstance->findOrFail($id);
     }
 }
