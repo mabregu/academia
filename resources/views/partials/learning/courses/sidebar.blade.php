@@ -18,6 +18,6 @@
         </div>
     </div>
     <div class="card-footer">
-        {{-- @include("partials.learning.courses.purchase_button") --}}
+        @include("partials.learning.courses.purchase_button")
     </div>
 </div>

@@ -51,7 +51,7 @@ class CourseSeeder extends Seeder
                 "status" => Course::PUBLISHED
             ],
             [
-                "title" => "MVC con Node.js y TypeScrpt",
+                "title" => "MVC con Node.js y TypeScript",
                 "description" => "Vamos a crear un sistema MVC con Node.js y TypeScript desde 0 para aprender a crear nuestros propios proyectos desde 0",
                 "price" => 29.99,
                 "bg" => "8DBC58",

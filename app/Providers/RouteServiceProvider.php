@@ -2,14 +2,16 @@
 
 namespace App\Providers;
 
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Route;
-use App\Models\Course;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\Coupon;
+use App\Models\Course;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -62,6 +64,14 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('course', function ($value, $route) {
             return $this->getModel(Course::class, $value);
+        });
+
+        Route::bind('coupon', function ($value, $route) {
+            return $this->getModel(Coupon::class, $value);
+        });
+
+        Route::bind('order', function ($value, $route) {
+            return $this->getModel(Order::class, $value);
         });
     }
 

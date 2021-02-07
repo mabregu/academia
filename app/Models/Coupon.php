@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\Hashidable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * App\Models\Coupon
@@ -15,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $discount_type
  * @property int $discount
  * @property int $enabled
- * @property string|null $expired_at
+ * @property string|null $expires_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
@@ -34,11 +37,67 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Course[] $courses
+ * @property-read int|null $courses_count
+ * @method static Builder|Coupon available(string $code)
+ * @method static Builder|Coupon forTeacher()
+ * @method static \Illuminate\Database\Query\Builder|Coupon onlyTrashed()
+ * @method static Builder|Coupon whereExpiresAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Coupon withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Coupon withoutTrashed()
  */
 class Coupon extends Model
 {
-    use HasFactory;
+    use HasFactory, Hashidable, SoftDeletes;
 
     const PERCENT = 'PERCENT';
     const PRICE = 'PRICE';
+
+    protected $fillable = [
+        'user_id',
+        'code',
+        'discount_type',
+        'discount',
+        'description',
+        'enabled',
+        'expires_at'
+    ];
+
+    protected $dates = [
+        "expires_at"
+    ];
+
+    protected static function boot() {
+        parent::boot();
+        if (!app()->runningInConsole()) {
+            self::saving(function ($table) {
+                $table->user_id = auth()->id();
+            });
+        }
+    }
+
+    public function courses() {
+        return $this->belongsToMany(Course::class);
+    }
+
+    public function scopeForTeacher(Builder $builder) {
+        return $builder
+            ->where("user_id", auth()->id())
+            ->paginate();
+    }
+
+    public function scopeAvailable(Builder $builder, string $code) {
+        return $builder
+            ->where("enabled", true)
+            ->where("code", $code)
+            ->where('expires_at', '>=', now())
+            ->orWhereNull('expires_at');
+    }
+
+    public static function discountTypes() {
+        return [
+            self::PERCENT => __("Porcentaje"),
+            self::PRICE => __("Fijo"),
+        ];
+    }
 }

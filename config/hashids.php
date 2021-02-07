@@ -48,6 +48,14 @@ return [
             'salt' => \App\Models\Unit::class.'c91a52c63222c1080a104b21f3331a60',
             'length' => 12,
         ],
+        \App\Models\Coupon::class => [
+            'salt' => \App\Models\Coupon::class.'169c2a908fe5a90a03e9992002a90fc8',
+            'length' => 6,
+        ],
+        \App\Models\Order::class => [
+            'salt' => \App\Models\Order::class.'a7d111409c5df4c897523b82e0d0d91e',
+            'length' => 10,
+        ],
     ],
 
 ];

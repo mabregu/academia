@@ -39,7 +39,7 @@ use Illuminate\Notifications\Notifiable;
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, Billable;
 
     const ADMIN = 'ADMIN';
     const TEACHER = 'TEACHER';
@@ -79,5 +79,25 @@ class User extends Authenticatable
     public function isTeacher()
     {
         return $this->role === User::TEACHER;
+    }
+
+    public function courses_learning() {
+        return $this->belongsToMany(Course::class, "course_student");
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
+
+    public function scopePurchasedCourses() {
+        return $this->courses_learning()->with("categories")->paginate();
+    }
+
+    public function scopeProcessedOrders() {
+        return $this->orders()
+            ->where("status", Order::SUCCESS)
+            ->with("order_lines", "coupon")
+            ->withCount("order_lines")
+            ->paginate();
     }
 }

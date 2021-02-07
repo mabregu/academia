@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Currency;
 use App\Traits\Hashidable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -42,6 +43,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property-read int|null $students_count
  * @property-read \App\Models\User $teacher
  * @method static Builder|Course filtered()
+ * @property-read mixed $formatted_price
+ * @property-read mixed $rating
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Unit[] $units
+ * @property-read int|null $units_count
+ * @method static Builder|Course forTeacher()
  */
 class Course extends Model
 {
@@ -116,9 +122,9 @@ class Course extends Model
         return $this->reviews->avg('stars');
     }
 
-    // public function getFormattedPriceAttribute() {
-    //     return Currency::formatCurrency($this->price);
-    // }
+    public function getFormattedPriceAttribute() {
+        return Currency::formatCurrency($this->price);
+    }
 
     public function totalVideoUnits() {
         return $this->units->where("unit_type", Unit::VIDEO)->count();

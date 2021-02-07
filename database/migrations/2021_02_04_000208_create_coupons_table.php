@@ -26,7 +26,7 @@ class CreateCouponsTable extends Migration
             ])->default(Coupon::PRICE);
             $table->tinyInteger('discount');
             $table->boolean('enabled');
-            $table->date('expired_at')->nullable();
+            $table->date('expires_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

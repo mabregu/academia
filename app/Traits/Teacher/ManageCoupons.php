@@ -70,7 +70,12 @@ trait ManageCoupons {
 
     protected function couponInput(): array {
         return request()->only(
-            "code", "description", "discount_type", "discount", "enabled", "expires_at"
+            "code",
+            "description",
+            "discount_type",
+            "discount",
+            "enabled",
+            "expires_at"
         );
     }
 }
